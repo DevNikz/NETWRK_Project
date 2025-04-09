@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using DilmerGames.Core.Singletons;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
 
-public class EnemyManager : NetworkBehaviour
+public class EnemyManager : NetworkSingleton<EnemyManager>
 {
     [System.Serializable]
     public struct enemyData {
@@ -20,28 +21,26 @@ public class EnemyManager : NetworkBehaviour
     [SerializeField] public List<GameObject> spawnLocation;
     [SerializeReference, ReadOnly] private List<GameObject> inactiveLocation;
     [SerializeField, ReadOnly] public List<GameObject> activeLocation;
-    [SerializeField] public GameObject enemyContainer;
 
     void Awake()
     {
         foreach(Transform child in transform) {
             if(child.name != this.gameObject.name) spawnLocation.Add(child.gameObject);
         }
-
-        NetworkManager.Singleton.OnServerStarted += () => {
-            NetworkObjectPool.Instance.InitializePool();
-        };
     }
 
     void Start()
     {
         inactiveLocation = spawnLocation;
+
+        NetworkManager.Singleton.OnServerStarted += () => { 
+            NetworkObjectPool.Instance.InitializePool();
+        };
     }
 
     void FixedUpdate()
     {
         if(!IsServer) return;
-
         if(SessionController.instance.inGame) {
             SpawnTimer();
         }
@@ -70,28 +69,31 @@ public class EnemyManager : NetworkBehaviour
     }
 
     IEnumerator SpawnBots() {
-        int count = Random.Range(1, 10); 
-        for(int i = 0; i < count; i++) {
-           SpawnBotIndex();
-        }
-        ReAddLocation();
+        SpawnBotIndex();
+        // int count = Random.Range(1, 10); 
+        // for(int i = 0; i < count; i++) {
+        //    SpawnBotIndex();
+        // }
+        // ReAddLocation();
 
         yield return new WaitForSeconds(0.1f);
     }
 
     void SpawnBotIndex() {
-        int index = Random.Range(0, 3);
+        //int index = Random.Range(0);
+        int index = 0;
         SpawnBot(enemyList[index].enemy, RandomPosition(), Quaternion.identity, enemyList[index].count);
     }
 
     void SpawnBot(GameObject enemy, Vector2 pos, Quaternion rot, int count) {
-        for (int i = 0; i < count; i++) {
+        int temp = Random.Range(1, count);
+        for (int i = 0; i < temp; i++) {
             GameObject go = NetworkObjectPool.Instance.GetNetworkObject(enemy).gameObject;
             go.transform.position = pos;
             go.transform.rotation = rot;
-            go.transform.parent = enemyContainer.transform;
             go.GetComponent<NetworkObject>().Spawn();
         }
+        ReAddLocation();
     }
 
     void ReAddLocation() {

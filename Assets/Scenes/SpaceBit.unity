@@ -1123,17 +1123,12 @@ MonoBehaviour:
   enemyList:
   - enemy: {fileID: 1712374595340289997, guid: 04a3941805ef7a54e838ea8488990cea, type: 3}
     count: 10
-  - enemy: {fileID: 1712374595340289997, guid: 19842818eac88b248b939bd16edab970, type: 3}
-    count: 10
-  - enemy: {fileID: 1712374595340289997, guid: 8a2c5079d0c43ca46840c1523a6f3483, type: 3}
-    count: 10
   minDelay: 1.5
   maxDelay: 6
   cooldownTimer: 0
   spawnLocation: []
   inactiveLocation: []
   activeLocation: []
-  enemyContainer: {fileID: 125411728}
 --- !u!114 &585542480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2535,7 +2530,6 @@ GameObject:
   - component: {fileID: 1105659995}
   - component: {fileID: 1105659994}
   - component: {fileID: 1105659993}
-  - component: {fileID: 1105659996}
   m_Layer: 5
   m_Name: Button (1)
   m_TagString: Untagged
@@ -2607,7 +2601,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1105659996}
+      - m_Target: {fileID: 1337177435}
         m_TargetAssemblyTypeName: NetworkControls, Assembly-CSharp
         m_MethodName: StartClient
         m_Mode: 1
@@ -2657,18 +2651,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1105659991}
   m_CullTransparentMesh: 1
---- !u!114 &1105659996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1105659991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bdb5a8af0c03fc4cab0d384bbe74978, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1153911236
 GameObject:
   m_ObjectHideFlags: 0
@@ -2702,6 +2684,7 @@ Transform:
   - {fileID: 585542478}
   - {fileID: 1851524378}
   - {fileID: 1795904251}
+  - {fileID: 1337177434}
   m_Father: {fileID: 1026573835}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1154683456
@@ -2959,6 +2942,52 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1337177433
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1337177434}
+  - component: {fileID: 1337177435}
+  m_Layer: 0
+  m_Name: NetworkControls
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1337177434
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337177433}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1153911237}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1337177435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337177433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bdb5a8af0c03fc4cab0d384bbe74978, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug: {fileID: 2020124284}
+  hasServerStarted: 0
 --- !u!1 &1346698816
 GameObject:
   m_ObjectHideFlags: 0
@@ -3003,7 +3032,6 @@ GameObject:
   - component: {fileID: 1436383059}
   - component: {fileID: 1436383058}
   - component: {fileID: 1436383057}
-  - component: {fileID: 1436383060}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -3075,7 +3103,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1436383060}
+      - m_Target: {fileID: 1337177435}
         m_TargetAssemblyTypeName: NetworkControls, Assembly-CSharp
         m_MethodName: StartHost
         m_Mode: 1
@@ -3125,18 +3153,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1436383055}
   m_CullTransparentMesh: 1
---- !u!114 &1436383060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1436383055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bdb5a8af0c03fc4cab0d384bbe74978, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1499118562
 GameObject:
   m_ObjectHideFlags: 0
@@ -3662,7 +3678,7 @@ MonoBehaviour:
   inLobby: 0
   inGame: 0
   isReady: 
-  countdownTimer: 10
+  countdownTimer: 3
   timer: 0
   playerList: []
   referenceGrid: {fileID: 1009166095}
@@ -3720,12 +3736,7 @@ MonoBehaviour:
   - Prefab: {fileID: 1712374595340289997, guid: 04a3941805ef7a54e838ea8488990cea,
       type: 3}
     PrewarmCount: 15
-  - Prefab: {fileID: 1712374595340289997, guid: 19842818eac88b248b939bd16edab970,
-      type: 3}
-    PrewarmCount: 15
-  - Prefab: {fileID: 1712374595340289997, guid: 8a2c5079d0c43ca46840c1523a6f3483,
-      type: 3}
-    PrewarmCount: 15
+  enemyContainer: {fileID: 125411728}
 --- !u!1 &1855790831
 GameObject:
   m_ObjectHideFlags: 0

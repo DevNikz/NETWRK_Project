@@ -3,17 +3,29 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class NetworkControls : MonoBehaviour
+public class NetworkControls : NetworkBehaviour
 {
+    public GameObject debug;
+    public bool hasServerStarted;
+
+    void Start()
+    {
+        NetworkManager.Singleton.OnServerStarted += () => { 
+            hasServerStarted = true;
+        };
+    }
+
     public void StartHost() {
-        if(!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer) {
-            NetworkManager.Singleton.StartHost();
-        }
+        NetworkManager.Singleton.StartHost();
+        DisableDebug();
     }
 
     public void StartClient() {
-        if(!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer) {
-            NetworkManager.Singleton.StartClient();
-        }
+        NetworkManager.Singleton.StartClient();
+        DisableDebug();
+    }
+
+    public void DisableDebug() {
+        debug.SetActive(false);
     }
 }

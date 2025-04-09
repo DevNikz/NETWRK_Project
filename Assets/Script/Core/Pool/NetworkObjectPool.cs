@@ -19,6 +19,9 @@ public class NetworkObjectPool : Singleton<NetworkObjectPool>
 
     Dictionary<GameObject, Queue<NetworkObject>> pooledObjects = new Dictionary<GameObject, Queue<NetworkObject>>();
 
+    [SerializeField]
+    GameObject enemyContainer;
+
 
     public void OnValidate()
     {
@@ -39,7 +42,7 @@ public class NetworkObjectPool : Singleton<NetworkObjectPool>
     /// <returns></returns>
     public NetworkObject GetNetworkObject(GameObject prefab)
     {
-        return GetNetworkObjectInternal(prefab, Vector3.zero, Quaternion.identity);
+        return GetNetworkObjectInternal(prefab, Vector2.zero, Quaternion.identity);
     }
 
     /// <summary>
@@ -49,7 +52,7 @@ public class NetworkObjectPool : Singleton<NetworkObjectPool>
     /// <param name="position">The position to spawn the object at.</param>
     /// <param name="rotation">The rotation to spawn the object with.</param>
     /// <returns></returns>
-    public NetworkObject GetNetworkObject(GameObject prefab, Vector3 position, Quaternion rotation)
+    public NetworkObject GetNetworkObject(GameObject prefab, Vector2 position, Quaternion rotation)
     {
         return GetNetworkObjectInternal(prefab, position, rotation);
     }
@@ -105,7 +108,7 @@ public class NetworkObjectPool : Singleton<NetworkObjectPool>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private GameObject CreateInstance(GameObject prefab)
     {
-        return Instantiate(prefab);
+        return Instantiate(prefab, enemyContainer.transform);
     }
 
     /// <summary>

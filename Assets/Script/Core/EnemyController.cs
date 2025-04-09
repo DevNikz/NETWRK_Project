@@ -5,14 +5,19 @@ using UnityEngine;
 public class EnemyController : NetworkBehaviour
 {
     [PropertyRange(0.1f, 25f)] public float Speed = 10f;
-    bool move = false;
+    [SerializeField] bool move = false;
 
     public override void OnNetworkSpawn() {
         move = true;
     }
 
+    public void OnEnable()
+    {
+        move = true;   
+    }
+
     void Update() {
-        if(!IsServer) return;
+        // if(!IsServer) return;
 
         if(move) {
             Vector3 pos = transform.position;

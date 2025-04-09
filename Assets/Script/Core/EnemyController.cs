@@ -1,16 +1,19 @@
 using Sirenix.OdinInspector;
+using Unity.Netcode;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour, IPooledObject
+public class EnemyController : NetworkBehaviour
 {
     [PropertyRange(0.1f, 25f)] public float Speed = 10f;
     bool move = false;
 
-    public void OnObjectSpawn() {
+    public override void OnNetworkSpawn() {
         move = true;
     }
 
     void Update() {
+        if(!IsServer) return;
+
         if(move) {
             Vector3 pos = transform.position;
             pos = new Vector3(0, -Speed * Time.deltaTime, 0);

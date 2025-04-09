@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class ObjectPoolManager : MonoBehaviour
@@ -27,6 +26,7 @@ public class ObjectPoolManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
+
     void Start()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
@@ -48,12 +48,9 @@ public class ObjectPoolManager : MonoBehaviour
 
         GameObject objectToSpawn = poolDictionary[tag].Dequeue();
 
-        InitCompParent(objectToSpawn, parentObj, objectToSpawn.tag);
-
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;
         objectToSpawn.transform.rotation = rotation;
-
 
         IPooledObject pooledObj = objectToSpawn.GetComponent<IPooledObject>();
 
@@ -66,19 +63,8 @@ public class ObjectPoolManager : MonoBehaviour
         return objectToSpawn;
     }
 
-    void InitCompParent(GameObject obj, GameObject parentObj, string tag) {
-        switch(tag) {
-            case "Bullet":
-                obj.GetComponent<Bullet>().parentObj = parentObj;
-                break;
-        }
-    }
-
     void InitParent(GameObject obj, string tag) {
         switch(tag) {
-            case "Bullet":
-                obj.transform.parent = BulletContainer.transform;
-                break;
             case "Enemy":
                 obj.transform.parent = EnemyContainer.transform;
                 break;

@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Sirenix.OdinInspector;
+using Unity.Netcode;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : NetworkBehaviour
 {
-    ObjectPoolManager objectPoolManager;
+    [System.Serializable]
+    public struct enemyData {
+        public GameObject enemy;
+        public int count;
+    }
+
+    [SerializeField] private List<enemyData> enemyList;
     [PropertyRange(1, 5)] public float minDelay = 1;
     [PropertyRange(6, 25f)] public float maxDelay = 10;
     [ReadOnly] public float cooldownTimer = 0;
@@ -14,22 +20,34 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] public List<GameObject> spawnLocation;
     [SerializeReference, ReadOnly] private List<GameObject> inactiveLocation;
     [SerializeField, ReadOnly] public List<GameObject> activeLocation;
+    [SerializeField] public GameObject enemyContainer;
 
     void Awake()
     {
         foreach(Transform child in transform) {
             if(child.name != this.gameObject.name) spawnLocation.Add(child.gameObject);
         }
+
+        NetworkManager.Singleton.OnServerStarted += () => {
+            NetworkObjectPool.Instance.InitializePool();
+        };
     }
 
     void Start()
     {
-        objectPoolManager = ObjectPoolManager.instance;   
         inactiveLocation = spawnLocation;
     }
 
     void FixedUpdate()
     {
+        if(!IsServer) return;
+
+        if(SessionController.instance.inGame) {
+            SpawnTimer();
+        }
+    }
+
+    void SpawnTimer() {
         cooldownTimer -= Time.deltaTime;
         if(cooldownTimer <= 0) {
             StartCoroutine(SpawnBots());
@@ -63,16 +81,16 @@ public class EnemyManager : MonoBehaviour
 
     void SpawnBotIndex() {
         int index = Random.Range(0, 3);
-        switch(index) {
-            case 0:
-                objectPoolManager.SpawnFromPool("Enemy1", RandomPosition(), Quaternion.identity);
-                break;
-            case 1:
-                objectPoolManager.SpawnFromPool("Enemy2", RandomPosition(), Quaternion.identity);
-                break;
-            case 2:
-                objectPoolManager.SpawnFromPool("Enemy3", RandomPosition(), Quaternion.identity);
-                break;
+        SpawnBot(enemyList[index].enemy, RandomPosition(), Quaternion.identity, enemyList[index].count);
+    }
+
+    void SpawnBot(GameObject enemy, Vector2 pos, Quaternion rot, int count) {
+        for (int i = 0; i < count; i++) {
+            GameObject go = NetworkObjectPool.Instance.GetNetworkObject(enemy).gameObject;
+            go.transform.position = pos;
+            go.transform.rotation = rot;
+            go.transform.parent = enemyContainer.transform;
+            go.GetComponent<NetworkObject>().Spawn();
         }
     }
 

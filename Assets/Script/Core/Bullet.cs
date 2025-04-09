@@ -8,15 +8,13 @@ public class Bullet : MonoBehaviour, IPooledObject {
     bool shoot = false;
     public GameObject parentObj;
 
-    public bool outofBounds;
-
     public void OnObjectSpawn() {
         shoot = true;
     }
 
-    void OnDisable()
+    void OnEnable()
     {
-        outofBounds = false;
+        shoot = true;
     }
 
     void Update()
@@ -32,12 +30,12 @@ public class Bullet : MonoBehaviour, IPooledObject {
     void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Enemy")) {
-            parentObj.GetComponent<PlayerController>().AddScore();
+            //parentObj.GetComponent<PlayerController>().AddScore();
+            parentObj.GetComponent<PlayerUI>().InstanceAddScore();
         }
 
         if(collision.CompareTag("DeleteBullet")) {
-            gameObject.layer = GetComponent<DamageHandler>().deadLayer;
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }      
     }
 }

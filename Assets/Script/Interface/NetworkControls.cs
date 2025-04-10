@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEngine;
+using Unity.Netcode.Transports.UTP;
 
 public class NetworkControls : NetworkBehaviour
 {
-    public GameObject debug;
     public bool hasServerStarted;
 
     void Start()
@@ -16,16 +13,18 @@ public class NetworkControls : NetworkBehaviour
     }
 
     public void StartHost() {
+        EnterLobby();
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(UserController.instance.GetIP(), (ushort)UserController.instance.GetPort());
         NetworkManager.Singleton.StartHost();
-        DisableDebug();
     }
-
+    
     public void StartClient() {
+        EnterLobby();
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(UserController.instance.GetIP(), (ushort)UserController.instance.GetPort());
         NetworkManager.Singleton.StartClient();
-        DisableDebug();
     }
 
-    public void DisableDebug() {
-        debug.SetActive(false);
+    public void EnterLobby() {
+        UserController.instance.SetState(1);
     }
 }

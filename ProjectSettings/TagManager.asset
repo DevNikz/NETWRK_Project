@@ -10,6 +10,7 @@ TagManager:
   - DeleteBot
   - PlayerShip
   - OutOfBounds
+  - HUD
   layers:
   - Default
   - TransparentFX

@@ -9,7 +9,7 @@ public class EnemyManager : NetworkSingleton<EnemyManager>
 {
     [System.Serializable]
     public struct enemyData {
-        public GameObject enemy;
+        public GameObject prefab;
         public int count;
     }
 
@@ -17,7 +17,11 @@ public class EnemyManager : NetworkSingleton<EnemyManager>
     [PropertyRange(1, 5)] public float minDelay = 1;
     [PropertyRange(6, 25f)] public float maxDelay = 10;
     [ReadOnly] public float cooldownTimer = 0;
+    [ReadOnly] public int enemyCountSpawned;
+    [ReadOnly] public bool HasSpawned;
 
+    [SerializeField] bool enableNetworkPool;
+    [SerializeField] GameObject enemyContainer;
     [SerializeField] public List<GameObject> spawnLocation;
     [SerializeReference, ReadOnly] private List<GameObject> inactiveLocation;
     [SerializeField, ReadOnly] public List<GameObject> activeLocation;
@@ -33,23 +37,45 @@ public class EnemyManager : NetworkSingleton<EnemyManager>
     {
         inactiveLocation = spawnLocation;
 
-        NetworkManager.Singleton.OnServerStarted += () => { 
-            NetworkObjectPool.Instance.InitializePool();
-        };
-    }
-
-    void FixedUpdate()
-    {
-        if(!IsServer) return;
-        if(SessionController.instance.inGame) {
-            SpawnTimer();
+        if(enableNetworkPool) {
+            NetworkManager.Singleton.OnServerStarted += () => { 
+                NetworkObjectPool.Instance.InitializePool();
+            };
         }
     }
 
-    void SpawnTimer() {
+    void Update()
+    {
+        if(!IsOwner) return;
+
+        if(SessionController.instance.inGame) {
+            TestServerRpc();
+        }
+    }
+
+    [ServerRpc]
+    void TestServerRpc() {
+        Debug.Log($"TestServerRpc accessed by Player{OwnerClientId}");
+        int index, temp;
+
         cooldownTimer -= Time.deltaTime;
         if(cooldownTimer <= 0) {
-            StartCoroutine(SpawnBots());
+            cooldownTimer = 0;
+
+            //Spawn
+            Debug.Log("Spawning Enemies...");
+            index = Random.Range(0, enemyList.Count-1);
+            temp = Random.Range(1, enemyList[index].count);
+            for (int i = 0; i < temp; i++) {
+                enemyCountSpawned++;
+                enemyData enemyRef = enemyList[index];
+                Transform enemyTemp = Instantiate(enemyRef.prefab.transform, RandomPosition(), Quaternion.identity, enemyContainer.transform);
+                enemyTemp.name = $"Enemy{enemyCountSpawned}";
+
+                NetworkObject enemyNetworkObject = enemyTemp.GetComponent<NetworkObject>();
+                enemyNetworkObject.Spawn(true);
+            }
+            ReAddLocation();
             cooldownTimer = RandomDelay();
         }
     }
@@ -66,34 +92,6 @@ public class EnemyManager : NetworkSingleton<EnemyManager>
         inactiveLocation.RemoveAt(temp);
 
         return tempLoc.transform.position;
-    }
-
-    IEnumerator SpawnBots() {
-        SpawnBotIndex();
-        // int count = Random.Range(1, 10); 
-        // for(int i = 0; i < count; i++) {
-        //    SpawnBotIndex();
-        // }
-        // ReAddLocation();
-
-        yield return new WaitForSeconds(0.1f);
-    }
-
-    void SpawnBotIndex() {
-        //int index = Random.Range(0);
-        int index = 0;
-        SpawnBot(enemyList[index].enemy, RandomPosition(), Quaternion.identity, enemyList[index].count);
-    }
-
-    void SpawnBot(GameObject enemy, Vector2 pos, Quaternion rot, int count) {
-        int temp = Random.Range(1, count);
-        for (int i = 0; i < temp; i++) {
-            GameObject go = NetworkObjectPool.Instance.GetNetworkObject(enemy).gameObject;
-            go.transform.position = pos;
-            go.transform.rotation = rot;
-            go.GetComponent<NetworkObject>().Spawn();
-        }
-        ReAddLocation();
     }
 
     void ReAddLocation() {

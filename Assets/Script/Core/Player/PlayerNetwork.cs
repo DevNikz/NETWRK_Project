@@ -21,7 +21,6 @@ public class PlayerNetwork : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         SessionController.instance.AddPlayer(this.gameObject);
-        //networkObject.OwnerClientId
 
         if(!IsOwner) {
             GetComponent<PlayerController>().enabled = false;
@@ -53,7 +52,8 @@ public class PlayerNetwork : NetworkBehaviour
     private Vector2 _posVel;
 
     private void ConsumeState() {
-        _rb.MovePosition(Vector2.SmoothDamp(transform.position, _playerState.Value.Position, ref _posVel, _cheapInterpolationTime));
+        _rb.MovePosition(Vector2.SmoothDamp(transform.position, 
+                        _playerState.Value.Position, ref _posVel, _cheapInterpolationTime));
     }
 
     [ServerRpc]

@@ -108,7 +108,7 @@ public class NetworkObjectPool : Singleton<NetworkObjectPool>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private GameObject CreateInstance(GameObject prefab)
     {
-        return Instantiate(prefab, enemyContainer.transform);
+        return Instantiate(prefab);
     }
 
     /// <summary>

@@ -53,7 +53,6 @@ public class PlayerController : NetworkBehaviour
     void MovePlayer() {
         _rb.velocity += _input.normalized * (_acceleration * Time.deltaTime);
         _rb.velocity = Vector2.ClampMagnitude(_rb.velocity, _maxVelocity);
-        //transform.Translate(_input);
     }
 
     void UpdateBounds() {
@@ -61,9 +60,5 @@ public class PlayerController : NetworkBehaviour
         viewPos.x = Mathf.Clamp(transform.position.x, -screenBounds.x + objectWidth, screenBounds.x - objectWidth);
         viewPos.y = Mathf.Clamp(transform.position.y, -screenBounds.y + objectHeight, screenBounds.y - objectHeight);
         transform.position = viewPos;
-    }
-
-    public void AddScore() {
-        //GetComponent<PlayerHUD>().AddScore();
     }
 }

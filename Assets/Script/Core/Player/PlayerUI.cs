@@ -13,38 +13,50 @@ public class PlayerUI : NetworkBehaviour {
     {
         if(!IsOwner) return;
 
-        if(Input.GetKeyDown(KeyCode.Space)) {
-            RequestReadyServerRpc();
-            switch(isReady) {
-                case false:
-                    AddReady();
-                    break;
-                default:
-                    RemoveReady();
-                    break;
+        if(SessionController.instance.inLobby) {
+            if(Input.GetKeyDown(KeyCode.Space)) {
+                RequestReadyServerRpc();
+                switch(isReady) {
+                    case false:
+                        AddReady();
+                        break;
+                    default:
+                        RemoveReady();
+                        break;
+                }
             }
+        }
+        else {
+            HideReady();
         }
     }
 
     public void InstanceAddScore() {
+        if(!IsOwner) return;
         RequestScoreServerRpc();
         AddScore();
     }
+
 
     [ServerRpc]
     void RequestScoreServerRpc(){
         ScoreClientRpc();
     }
     
-    [ServerRpc]
-    void RequestReadyServerRpc() {
-        ReadyClientRpc();
-    }
-   
 
     [ClientRpc]
     void ScoreClientRpc() {
         if(!IsOwner) AddScore();
+    }
+
+    public void AddScore() {
+        score++;
+        scoreText.text = $"{score}";
+    }
+
+    [ServerRpc]
+    void RequestReadyServerRpc() {
+        ReadyClientRpc();
     }
  
     [ClientRpc]
@@ -73,9 +85,18 @@ public class PlayerUI : NetworkBehaviour {
         SessionController.instance.SetReady(GetComponent<PlayerController>()._id, false);
     }
 
-    public void AddScore() {
-        score++;
-        scoreText.text = $"{score}";
+    public void HideReady() {
+        HideReadyServerRpc();
+    }
+
+    [ServerRpc]
+    public void HideReadyServerRpc() {
+        HideReadyClientRpc();
+    }
+
+    [ClientRpc]
+    public void HideReadyClientRpc() {
+        readyText.enabled = false;
     }
 
 }

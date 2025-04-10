@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 1596417346875893560}
   - component: {fileID: 1232264409300617246}
   - component: {fileID: 4277848289383808750}
-  - component: {fileID: 8463253342550280731}
   - component: {fileID: 333858271212861706}
   - component: {fileID: 7805835823797022415}
   - component: {fileID: 2506023356764441097}
   - component: {fileID: 8638174267050701213}
+  - component: {fileID: 2264013285467736886}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -165,30 +165,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.04, y: 0.04}
   m_EdgeRadius: 0
---- !u!114 &8463253342550280731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1712374595340289997}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97ab936001b77ca43898582b87c3c1ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 1
-  health: 1
-  invulnPeriod: 0
-  defaultLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  deadLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  animator: {fileID: 0}
-  hitParticle: {fileID: 0}
-  deathFX: {fileID: 0}
 --- !u!114 &333858271212861706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +184,7 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
+  DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
 --- !u!114 &7805835823797022415
 MonoBehaviour:
@@ -222,7 +198,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a66e193e773be9d4fa7d7d8c20a155b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 2
+  Speed: 1.25
+  move: 0
 --- !u!114 &2506023356764441097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,6 +243,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2264013285467736886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712374595340289997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97ab936001b77ca43898582b87c3c1ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 1
+  health: 0
+  invulnPeriod: 0
+  defaultLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  deadLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  animator: {fileID: 0}
+  hitParticle: {fileID: 0}
+  deathFX: {fileID: 0}
+  index: 0
 --- !u!1001 &8524515840055636420
 PrefabInstance:
   m_ObjectHideFlags: 0

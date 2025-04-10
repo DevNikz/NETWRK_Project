@@ -1,19 +1,19 @@
+using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour, IPooledObject {
+public class Bullet : MonoBehaviour {
     
     [PropertyRange(0.1f, 25f)] public float Speed = 10f;
-
+    [SerializeReference, ReadOnly] private int health = 1;
+    [SerializeReference, ReadOnly] public LayerMask deadLayer;
     bool shoot = false;
+    bool isColliding = false;
     public GameObject parentObj;
-
-    public void OnObjectSpawn() {
-        shoot = true;
-    }
 
     void OnEnable()
     {
+        deadLayer = LayerMask.NameToLayer("Dead");
         shoot = true;
     }
 
@@ -30,12 +30,25 @@ public class Bullet : MonoBehaviour, IPooledObject {
     void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Enemy")) {
-            //parentObj.GetComponent<PlayerController>().AddScore();
-            parentObj.GetComponent<PlayerUI>().InstanceAddScore();
+            if(isColliding) return;
+            isColliding = true;
+            health--;
+            if(gameObject.activeInHierarchy) StartCoroutine(Hit());
         }
 
         if(collision.CompareTag("DeleteBullet")) {
             Destroy(gameObject);
         }      
+    }
+
+    IEnumerator Hit() {
+        gameObject.layer = deadLayer;
+        gameObject.SetActive(false);
+        parentObj.GetComponent<PlayerUI>().InstanceAddScore();
+
+        yield return new WaitForSeconds(0.15f);
+        Destroy(gameObject);
+
+        yield return default;
     }
 }

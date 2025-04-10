@@ -25,11 +25,6 @@ public class SessionController : MonoBehaviour
     [SerializeReference] public GameObject bulletContainer;
     [SerializeReference, ReadOnly] public List<GameObject> playerSpawn;
 
-    [Button(ButtonSizes.Large)]
-    public void AddScorePlayerOne() {
-        playerList[0].AddScore();
-    }
-
 
     void Awake()
     {

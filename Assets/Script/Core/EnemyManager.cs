@@ -55,7 +55,7 @@ public class EnemyManager : NetworkSingleton<EnemyManager>
 
     [ServerRpc]
     void TestServerRpc() {
-        Debug.Log($"TestServerRpc accessed by Player{OwnerClientId}");
+        //Debug.Log($"TestServerRpc accessed by Player{OwnerClientId}");
         int index, temp;
 
         cooldownTimer -= Time.deltaTime;
@@ -63,7 +63,7 @@ public class EnemyManager : NetworkSingleton<EnemyManager>
             cooldownTimer = 0;
 
             //Spawn
-            Debug.Log("Spawning Enemies...");
+            //Debug.Log("Spawning Enemies...");
             index = Random.Range(0, enemyList.Count-1);
             temp = Random.Range(1, enemyList[index].count);
             for (int i = 0; i < temp; i++) {

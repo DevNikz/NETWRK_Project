@@ -255,16 +255,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ab936001b77ca43898582b87c3c1ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 2
+  maxHealth: 1
   health: 1
-  invulnPeriod: 0
   defaultLayer:
     serializedVersion: 2
     m_Bits: 128
   deadLayer:
     serializedVersion: 2
     m_Bits: 1024
-  animator: {fileID: 0}
   hitParticle: {fileID: 0}
   deathFX: {fileID: 0}
 --- !u!1001 &778675520130031313

@@ -257,17 +257,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 1
   health: 0
-  invulnPeriod: 0
   defaultLayer:
     serializedVersion: 2
     m_Bits: 128
   deadLayer:
     serializedVersion: 2
-    m_Bits: 0
-  animator: {fileID: 0}
+    m_Bits: 1024
   hitParticle: {fileID: 0}
   deathFX: {fileID: 0}
-  index: 0
 --- !u!1001 &8524515840055636420
 PrefabInstance:
   m_ObjectHideFlags: 0

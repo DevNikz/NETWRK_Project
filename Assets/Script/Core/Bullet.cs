@@ -45,7 +45,6 @@ public class Bullet : MonoBehaviour {
         gameObject.layer = deadLayer;
         gameObject.SetActive(false);
         parentObj.GetComponent<PlayerUI>().InstanceAddScore();
-
         yield return new WaitForSeconds(0.15f);
         Destroy(gameObject);
 

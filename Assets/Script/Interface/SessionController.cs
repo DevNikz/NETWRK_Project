@@ -44,7 +44,7 @@ public class SessionController : MonoBehaviour
 
     void Update() {
         if(playerCount > 0) UpdateLobby();
-        if(!inLobby && inGame) UpdateGame();
+        // if(!inLobby && inGame) UpdateGame();
     }
 
     void UpdateLobby() {
@@ -65,8 +65,8 @@ public class SessionController : MonoBehaviour
         }
     }
 
-    void UpdateGame() {
-        
+    public int GetTimer() {
+        return (int)timer;
     }
 
     public void AddPlayer(GameObject player) {
@@ -89,7 +89,7 @@ public class SessionController : MonoBehaviour
         player.GetComponent<PlayerUI>().scoreText = tempScore.transform.Find("SCORE").GetComponent<TextMeshProUGUI>();
     }
 
-    bool AllPlayersReady() {
+    public bool AllPlayersReady() {
         if(isReady.All(x => x == true) && isReady.Count > 0) {
             return true;
         }

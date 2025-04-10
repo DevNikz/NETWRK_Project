@@ -8,15 +8,12 @@ public class DamageHandler : NetworkBehaviour
 {
     [PropertyRange(1, 100)] public int maxHealth;
     [SerializeReference, ReadOnly] private int health;
-    public float invulnPeriod = 0;
-    float invulnTimer = 0;
-    //int correctLayer;
+
     [SerializeReference] private LayerMask defaultLayer;
     [SerializeReference, ReadOnly] public LayerMask deadLayer;
-    [SerializeReference, ReadOnly] public Animator animator;
     [SerializeReference, ReadOnly] public ParticleSystem hitParticle;
     [SerializeReference, ReadOnly] public ParticleSystem deathFX;
-    [SerializeReference] public int index;
+    bool isDead;
 
     void Start()
     {
@@ -30,16 +27,6 @@ public class DamageHandler : NetworkBehaviour
         deadLayer = LayerMask.NameToLayer("Dead");
     }
 
-    public override void OnNetworkSpawn()
-    {
-        Debug.Log($"{gameObject.name} has Spawned");
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        Debug.Log($"{gameObject.name} has Despawned");
-    }
-
     void OnEnable() {
         health = maxHealth; 
     }
@@ -48,20 +35,26 @@ public class DamageHandler : NetworkBehaviour
         GetComponent<SpriteRenderer>().enabled = true;
     }
 
-
     void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Bullet")) {
-            health--;
-            invulnTimer = invulnPeriod;
-            if(gameObject.activeInHierarchy) StartCoroutine(Hit());
+            CheckHealth();
+
+            //invulnTimer = invulnPeriod;
+            if(gameObject.activeInHierarchy) StartCoroutine(HitCoroutine());
         }
     }
 
 
-    IEnumerator Hit() {
+    void CheckHealth() {
+        health--;
+        if(health <= 0) isDead = true;
+        else isDead = false;
+    }
+
+
+    IEnumerator HitCoroutine() {
         if(health > 0) {
-            //if(animator != null) animator.Play("Hit");
             if(hitParticle != null) hitParticle.Play();
         }
 
@@ -74,11 +67,16 @@ public class DamageHandler : NetworkBehaviour
             }
 
             gameObject.layer = deadLayer;
-            if(IsOwner) InstanceDespawnServerRpc();
-            gameObject.SetActive(false);
+            if(IsServer) InstanceDespawnServerRpc();
+            else InstanceDespawnClientRpc();
+            InstanceDespawnClientRpc();
         }
 
         yield return default;
+    }
+
+    public bool GetDead() {
+        return isDead;
     }
 
     [ServerRpc]
@@ -86,15 +84,8 @@ public class DamageHandler : NetworkBehaviour
         GetComponent<NetworkObject>().Despawn();
     }
 
-    void Update()
-    {
-        InvulnTimer();
-    }
-
-    void InvulnTimer() {
-        invulnTimer -= Time.deltaTime;
-        if(invulnTimer <= 0) {
-            gameObject.layer = defaultLayer;
-        }
+    [ClientRpc]
+    void InstanceDespawnClientRpc() {
+        gameObject.SetActive(false);
     }
 }

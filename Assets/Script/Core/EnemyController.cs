@@ -40,13 +40,19 @@ public class EnemyController : NetworkBehaviour
         if(collision.CompareTag("DeleteBot")) {
             gameObject.layer = GetComponent<DamageHandler>().deadLayer;
             move = false;
-            if(IsOwner) InstanceDespawnServerRpc();
-            gameObject.SetActive(false);
+            if(IsServer) InstanceDespawnServerRpc();
+            else InstanceDespawnClientRpc();
+            InstanceDespawnClientRpc();
         }      
     }
 
     [ServerRpc]
     void InstanceDespawnServerRpc() {
         GetComponent<NetworkObject>().Despawn();
+    }
+
+    [ClientRpc]
+    void InstanceDespawnClientRpc() {
+        gameObject.SetActive(false);
     }
 }

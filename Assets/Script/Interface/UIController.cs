@@ -1,9 +1,7 @@
 using System.Collections;
 using Sirenix.Utilities;
 using TMPro;
-using Unity.Tutorials.Core.Editor;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
     Transform content;
@@ -16,6 +14,8 @@ public class UIController : MonoBehaviour {
     TextMeshProUGUI portPlaceholder;
     public string portStringPlaceholder;
     public string portString;
+    public TextMeshProUGUI countdown;
+    public string countdownText;
 
     void Awake()
     {
@@ -31,8 +31,20 @@ public class UIController : MonoBehaviour {
 
         //End
         Loading = content.Find("LOADING").gameObject;
+        countdown = content.Find("COUNTDOWN").GetComponent<TextMeshProUGUI>();
+
         HideAllUI();
         Welcome.SetActive(true);
+    }
+
+    void Update()
+    {
+        if(SessionController.instance.AllPlayersReady()) UpdateTimer();
+    }
+
+    void UpdateTimer() {
+        if(SessionController.instance.GetTimer() > 0) countdown.text = $"{SessionController.instance.GetTimer()}";
+        else countdown.text = "";
     }
 
     public void ReadIPInput(string s) {
@@ -59,7 +71,7 @@ public class UIController : MonoBehaviour {
 
     public string CheckIP() {
         if(MainMenu.gameObject.activeInHierarchy) {
-            if(ipString.IsNullOrEmpty()) {
+            if(string.IsNullOrEmpty(ipString)) {
                 return ipStringPlaceholder;
             }
             else return ipString;
@@ -69,7 +81,7 @@ public class UIController : MonoBehaviour {
 
     public int CheckPort() {
         if(MainMenu.gameObject.activeInHierarchy) {
-            if(portString.IsNullOrEmpty()) {
+            if(string.IsNullOrEmpty(portString)) {
                 return int.Parse(portStringPlaceholder);
             }
             else return int.Parse(portString);
@@ -88,8 +100,6 @@ public class UIController : MonoBehaviour {
 
     IEnumerator SetLobbyCoroutine() {
         HideAllUI();
-        Loading.SetActive(true);
-        yield return new WaitForSeconds(5f);
-        HideAllUI();
+        yield break;
     }
 }
